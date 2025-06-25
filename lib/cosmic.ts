@@ -1,4 +1,3 @@
-// lib/cosmic.ts
 import { createBucketClient } from '@cosmicjs/sdk'
 import { NewsArticle, ZipCodeArea, NewsSource, Tip, CosmicResponse, isCosmicError } from '@/types'
 
