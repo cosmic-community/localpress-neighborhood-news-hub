@@ -121,8 +121,12 @@ class NewsDataAPI {
   }
 }
 
-// Initialize NewsData.io client
-const newsDataClient = new NewsDataAPI(process.env.NEWSDATA_API_KEY as string);
+// Initialize NewsData.io client - with proper null check
+const apiKey = process.env.NEWSDATA_API_KEY;
+if (!apiKey) {
+  throw new Error('NEWSDATA_API_KEY environment variable is required');
+}
+const newsDataClient = new NewsDataAPI(apiKey);
 
 // Convert NewsData article to our NewsArticle format
 function convertNewsDataToCosmicFormat(
@@ -143,9 +147,10 @@ function convertNewsDataToCosmicFormat(
     'technology': { key: 'business', value: 'Business' },
   };
 
-  // Determine category from NewsData categories
-  const category = article.category && article.category.length > 0
-    ? categoryMapping[article.category[0]] || { key: 'local', value: 'Local News' }
+  // Determine category from NewsData categories - with proper null checks
+  const firstCategory = article.category && article.category.length > 0 ? article.category[0] : null;
+  const category = firstCategory && categoryMapping[firstCategory] 
+    ? categoryMapping[firstCategory] 
     : { key: 'local', value: 'Local News' };
 
   return {
@@ -175,10 +180,12 @@ export async function fetchNewsForZipCode(
 ): Promise<Partial<NewsArticle>[]> {
   try {
     const searchTerms = [
-      zipCodeArea.metadata.city,
-      zipCodeArea.metadata.county,
-      `${zipCodeArea.metadata.city} ${zipCodeArea.metadata.state}`,
-    ].filter(Boolean);
+      zipCodeArea.metadata?.city,
+      zipCodeArea.metadata?.county,
+      zipCodeArea.metadata?.city && zipCodeArea.metadata?.state 
+        ? `${zipCodeArea.metadata.city} ${zipCodeArea.metadata.state}`
+        : null,
+    ].filter((term): term is string => Boolean(term));
 
     const results: Partial<NewsArticle>[] = [];
 
