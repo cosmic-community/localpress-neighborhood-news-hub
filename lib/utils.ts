@@ -197,5 +197,6 @@ export function getPlaceholderColor(seed: string): string {
     hash = seed.charCodeAt(i) + ((hash << 5) - hash);
   }
   
-  return colors[Math.abs(hash) % colors.length];
+  const colorIndex = Math.abs(hash) % colors.length;
+  return colors[colorIndex] || 'bg-gray-100';
 }

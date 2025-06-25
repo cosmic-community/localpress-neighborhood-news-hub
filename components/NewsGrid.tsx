@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { NewsArticle, CategoryKey } from '@/types'
+import { categoryConfigs } from '@/lib/utils'
 import NewsCard from './NewsCard'
 import CategoryFilter from './CategoryFilter'
 
@@ -56,7 +57,7 @@ export default function NewsGrid({ articles }: NewsGridProps) {
             ? `Showing all ${articles.length} article${articles.length !== 1 ? 's' : ''}`
             : `Showing ${filteredArticles.length} of ${articles.length} article${articles.length !== 1 ? 's' : ''} in ${
                 selectedCategory === 'all' ? 'all categories' : 
-                categoryConfigs.find(c => c.key === selectedCategory)?.value || selectedCategory
+                categoryConfigs.find((c: { key: CategoryKey; value: string }) => c.key === selectedCategory)?.value || selectedCategory
               }`
           }
         </p>

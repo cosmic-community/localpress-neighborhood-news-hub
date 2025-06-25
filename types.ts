@@ -147,7 +147,9 @@ export function isTip(obj: CosmicObject): obj is Tip {
 }
 
 // Utility types
-export type OptionalMetadata<T> = Partial<T['metadata']>;
+export type OptionalMetadata<T extends CosmicObject> = T & {
+  metadata: Partial<T['metadata']>;
+};
 export type CreateTipData = Omit<Tip, 'id' | 'created_at' | 'modified_at'>;
 
 // Error handling types
