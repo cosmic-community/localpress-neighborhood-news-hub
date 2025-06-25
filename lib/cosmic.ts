@@ -212,7 +212,7 @@ export async function searchNewsArticles(keyword: string, zipCode?: string): Pro
 
     // If zip code is provided, filter by it
     if (zipCode) {
-      const zipCodeArea = await findZipCodeArea(zipCode);
+      const zipCodeArea: ZipCodeArea | null = await findZipCodeArea(zipCode);
       if (zipCodeArea) {
         query['metadata.zip_code_areas'] = zipCodeArea.id;
       }
