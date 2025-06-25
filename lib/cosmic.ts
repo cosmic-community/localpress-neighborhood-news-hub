@@ -76,7 +76,7 @@ export async function findZipCodeArea(zipCode: string): Promise<ZipCodeArea | nu
       .limit(1);
     
     const areas = response.objects as ZipCodeArea[];
-    return areas.length > 0 ? areas[0] : null;
+    return areas.length > 0 ? areas[0] || null : null;
   } catch (error) {
     if (hasStatus(error) && error.status === 404) {
       return null;
