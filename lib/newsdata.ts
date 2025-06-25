@@ -1,5 +1,5 @@
 // lib/newsdata.ts
-import { NewsArticle, ZipCodeArea, NewsSource } from '@/types'
+import { NewsArticle, ZipCodeArea, NewsSource, CategoryKey } from '@/types'
 
 // NewsData.io API response interfaces
 interface NewsDataArticle {
@@ -134,24 +134,24 @@ function convertNewsDataToCosmicFormat(
   zipCodeAreas: ZipCodeArea[] = [],
   newsSource?: NewsSource
 ): Partial<NewsArticle> {
-  // Map NewsData categories to our category system
-  const categoryMapping: Record<string, { key: string; value: string }> = {
-    'politics': { key: 'politics', value: 'Politics' },
-    'business': { key: 'business', value: 'Business' },
-    'sports': { key: 'sports', value: 'Sports' },
-    'domestic': { key: 'local', value: 'Local News' },
-    'other': { key: 'community', value: 'Community' },
-    'environment': { key: 'community', value: 'Community' },
-    'health': { key: 'community', value: 'Community' },
-    'science': { key: 'community', value: 'Community' },
-    'technology': { key: 'business', value: 'Business' },
+  // Map NewsData categories to our category system with proper CategoryKey typing
+  const categoryMapping: Record<string, { key: CategoryKey; value: string }> = {
+    'politics': { key: 'politics' as CategoryKey, value: 'Politics' },
+    'business': { key: 'business' as CategoryKey, value: 'Business' },
+    'sports': { key: 'sports' as CategoryKey, value: 'Sports' },
+    'domestic': { key: 'local' as CategoryKey, value: 'Local News' },
+    'other': { key: 'community' as CategoryKey, value: 'Community' },
+    'environment': { key: 'community' as CategoryKey, value: 'Community' },
+    'health': { key: 'community' as CategoryKey, value: 'Community' },
+    'science': { key: 'community' as CategoryKey, value: 'Community' },
+    'technology': { key: 'business' as CategoryKey, value: 'Business' },
   };
 
   // Determine category from NewsData categories - with proper null checks
   const firstCategory = article.category && article.category.length > 0 ? article.category[0] : null;
   const category = firstCategory && categoryMapping[firstCategory] 
     ? categoryMapping[firstCategory] 
-    : { key: 'local', value: 'Local News' };
+    : { key: 'local' as CategoryKey, value: 'Local News' };
 
   return {
     title: article.title,
